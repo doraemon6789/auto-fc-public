@@ -13,7 +13,7 @@
 #   concurrency 不用改：用的是 ${{ github.workflow }}，每个文件天然互斥。
 #   TG 和代理的 Secret 各账号共用，不用复制。
 #
-#   两种模式（FC_MODE=delay|rebuild）每轮都会把号段和数据盘的**免费月份**
+#   三种模式（FC_MODE=delay|rebuild|grab）每轮都会把号段和数据盘的**免费月份**
 #   续到上限，要花钱的档位一律不动。延期模式只续不租（不重建端口就不租新号段）。
 #
 # -----------------------------------------------------------------------------
@@ -36,7 +36,7 @@
 #                        hy2:// vless:// trojan:// ss:// tuic:// anytls://
 #
 # Variables（可选，各账号共用）
-#   FC_MODE                delay（默认）| rebuild
+#   FC_MODE                delay（默认）| rebuild | grab（抢机）
 #                          delay   = 到期点「延长 72 小时」，不动机器、不做镜像
 #                          rebuild = 备份镜像 → 退订 → 用镜像重开
 #                          不配就是 delay
@@ -101,6 +101,7 @@ jobs:
       # 不配这个 Variable 就跑延期。
       # 延期(delay) 还是 重建(rebuild)。不配就是 delay
       FC_MODE: ${{ vars.FC_MODE || 'delay' }}
+      FC_GRAB_SPEC: ${{ vars.FC_GRAB_SPEC }}
       # 剩余延长期不足这么多小时才点下一次（默认 48）。
       # 每天跑一次 + 48 小时窗口 = 隔一天才可能点到，点得越稀越不像脚本。
       FC_EXTEND_KEEP_HOURS: ${{ vars.FC_EXTEND_KEEP_HOURS || '48' }}
