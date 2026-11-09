@@ -115,7 +115,6 @@ jobs:
       # 抢机只盯某一档时填这里（名称或规格 id）：容器1核1G / 1:1 …
       # 留空 = 抢 0 元档里最大的那个。只对 FC_MODE=grab 有意义。
       FC_GRAB_SPEC: ${{ vars.FC_GRAB_SPEC }}
-      FC_GRAB_SPEC: ${{ vars.FC_GRAB_SPEC }}
       # 剩余延长期不足这么多小时才点下一次（默认 48）。
       # 每天跑一次 + 48 小时窗口 = 隔一天才可能点到，点得越稀越不像脚本。
       FC_EXTEND_KEEP_HOURS: ${{ vars.FC_EXTEND_KEEP_HOURS || '48' }}
