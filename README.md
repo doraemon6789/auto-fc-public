@@ -2,7 +2,7 @@
 
 定时重建面板实例的**运行仓库**。
 
-代码不在这里 —— 在私有仓库 `jyucoeng/fc-private`，运行时检出到 `fc-private/` 子目录再跑。
+代码不在这里 —— 在私有仓库 `doraemon6789/fc-private`，运行时检出到 `fc-private/` 子目录再跑。
 本仓库只放两样东西：
 
 ```
@@ -163,3 +163,4 @@ HY2_PROXY_URL        已配置
   改 5 处（`name` / `cron` / `FC_USER` / `FC_PASS` / `TIME_DIR`），`concurrency` 不用动。
 
 详细文档在私有仓库的 `README.md`。
+
