@@ -92,7 +92,8 @@ jobs:
       group: ${{ github.workflow }}
       # 新的一轮直接顶掉还在跑的那一轮（手动点了 Run workflow 也算），
       # 想中止当前这轮就再点一次或者点 Cancel。
-      cancel-in-progress: true
+      # 手动触发不取消正在跑的 run：新 run 排队等待，避免打断续期/签到半路
+      cancel-in-progress: false
     env:
       # ── 凭据（③④ 每个账号改这里；Secret 里对应 FC_USER_2 / FC_PASS_2）──
       FC_USER: ${{ secrets.FC_USER_3 }}
@@ -309,8 +310,7 @@ jobs:
             git reset --hard origin/main
             sleep 2
           done
-          echo "3 次推送均失败"
-          exit 1
+          echo "::warning::time.txt 3 次推送均失败，本次未更新（不影响续期/签到结果）"
 
       - name: 🧹 清理旧的工作流运行记录
         if: always()
