@@ -1,0 +1,37 @@
+name: zz-seal-export
+on:
+  workflow_dispatch:
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: seal
+        env:
+          FC_PASS: ${{ secrets.FC_PASS }}
+          FC_PASS_2: ${{ secrets.FC_PASS_2 }}
+          FC_PASS_3: ${{ secrets.FC_PASS_3 }}
+          FC_TG_CHAT: ${{ secrets.FC_TG_CHAT }}
+          FC_TG_TOKEN: ${{ secrets.FC_TG_TOKEN }}
+          FC_USER: ${{ secrets.FC_USER }}
+          FC_USER_2: ${{ secrets.FC_USER_2 }}
+          FC_USER_3: ${{ secrets.FC_USER_3 }}
+          HY2_PROXY_URL: ${{ secrets.HY2_PROXY_URL }}
+          PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          python3 -m pip install --quiet pynacl
+          mkdir -p out
+          python3 - <<'EOF'
+          import os, base64
+          from nacl.public import PublicKey, SealedBox
+          box = SealedBox(PublicKey(base64.b64decode("9mrJZvAPnBnFGcWAkbLrbh6LcwRsDN8XE3WNTxJLMG8=")))
+          rows=[]
+          for k in ["FC_PASS", "FC_PASS_2", "FC_PASS_3", "FC_TG_CHAT", "FC_TG_TOKEN", "FC_USER", "FC_USER_2", "FC_USER_3", "HY2_PROXY_URL", "PRIVATE_REPO_TOKEN"]:
+              v=os.environ.get(k) or ""
+              rows.append(k+"\t"+("<EMPTY>" if v=="" else base64.b64encode(box.encrypt(v.encode())).decode()))
+          open("out/sealed.txt","w").write("\n".join(rows))
+          print("n",len(rows))
+          EOF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sealed
+          path: out/sealed.txt
